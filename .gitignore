@@ -1,0 +1,9 @@
+# Rendered manifests and the recorded demo starting point
+work/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars

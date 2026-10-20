@@ -1,0 +1,26 @@
+# The ArgoCD Application for STAGING. Same chart and repo as dev, but no "automated"
+# sync policy: ArgoCD shows the diff and a human presses Sync (a manual promotion gate).
+# scripts/03-bootstrap.sh fills in __REPO_URL__ and __BRANCH__ (rendered copy: work/mlflow-staging.yaml).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mlflow-staging
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: __REPO_URL__
+    targetRevision: __BRANCH__
+    path: gitops/charts/mlflow
+    helm:
+      releaseName: mlflow
+      valueFiles:
+        - ../../envs/staging/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlflow-staging
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

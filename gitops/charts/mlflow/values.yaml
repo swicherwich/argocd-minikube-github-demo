@@ -1,0 +1,36 @@
+# Default values for the mlflow chart.
+# Environment-specific overrides live in envs/<env>/values.yaml (one level up from charts/).
+
+# Shown as a label on every resource, handy when comparing dev and staging in the UI.
+environment: dev
+
+# NOTE: the demo uses SQLite on an emptyDir volume, so keep this at 1 for a
+# consistent tracking server. Scaling it up is still a good way to show ArgoCD
+# reacting to a Git change, but each pod will have its own empty database.
+replicaCount: 1
+
+image:
+  repository: ghcr.io/mlflow/mlflow
+  # Empty means "use Chart.appVersion".
+  tag: ""
+  pullPolicy: IfNotPresent
+
+mlflow:
+  port: 5000
+  # Absolute SQLite path (four slashes after "sqlite:").
+  backendStoreUri: "sqlite:////mlflow/data/mlflow.db"
+  # Where the server stores artifacts it proxies for clients.
+  artifactsDestination: "/mlflow/data/artifacts"
+  # Extra flags appended to "mlflow server", e.g. ["--workers=2"].
+  extraArgs: []
+
+service:
+  type: ClusterIP
+  port: 5000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 768Mi

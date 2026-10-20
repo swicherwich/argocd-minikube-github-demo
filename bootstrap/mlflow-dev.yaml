@@ -1,0 +1,30 @@
+# The ArgoCD Application for DEV (deck slide 39): "deploy this folder of this Git repo
+# into this cluster namespace". scripts/03-bootstrap.sh fills in __REPO_URL__ and
+# __BRANCH__ from your fork (rendered copy: work/mlflow-dev.yaml).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mlflow-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: __REPO_URL__
+    targetRevision: __BRANCH__
+    path: gitops/charts/mlflow
+    helm:
+      releaseName: mlflow
+      valueFiles:
+        - ../../envs/dev/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlflow-dev
+  # DEV deploys automatically and reverts manual changes made in the cluster.
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

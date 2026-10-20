@@ -1,0 +1,6 @@
+apiVersion: v2
+name: mlflow
+description: Minimal MLflow tracking server for the ArgoCD + Helm GitOps demo
+type: application
+version: 0.1.0
+appVersion: "v3.17.1"

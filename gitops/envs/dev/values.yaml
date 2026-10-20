@@ -1,0 +1,4 @@
+# Overrides for the DEV environment.
+# Change a value here, commit and push: ArgoCD rolls it out to mlflow-dev.
+environment: dev
+replicaCount: 1
